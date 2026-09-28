@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f2f5">
+  <title>Shellbay SSH Studio</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/node_modules/@xterm/xterm/css/xterm.css">
+  <script src="/node_modules/@xterm/xterm/lib/xterm.js" defer></script>
+  <script src="/node_modules/@xterm/addon-fit/lib/addon-fit.js" defer></script>
+  <script src="/node_modules/@xterm/addon-search/lib/addon-search.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><img src="/logo.svg" alt=""><div><strong>Shellbay</strong><span>SSH STUDIO</span></div></div>
+      <div class="sidebar-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="connections"><span class="nav-icon">⌘</span>Connections</button>
+      <button class="nav-item" data-view="toolbox"><span class="nav-icon">▦</span>Toolbox <span class="nav-count">100+</span></button>
+      <button class="nav-item" data-view="activity"><span class="nav-icon">◷</span>Activity</button>
+      <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
+      <div class="side-bottom"><div class="shield">◇</div><div><strong>Local-first security</strong><p>Keys stay on this machine.<br>Host checks stay enabled.</p></div></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><b>/</b><strong id="crumb">Connections</strong></div><div class="top-actions"><span class="secure-indicator"><i></i> Local session</span><button class="icon-button" id="lock-button" title="Lock session" aria-label="Lock session">⌑</button></div></header>
+      <section class="view active-view" id="connections-view">
+        <div class="page-heading"><div><div class="eyebrow">SECURE REMOTE ACCESS</div><h1>Your connections</h1><p>Connect to your machines over SSH, right from your browser.</p></div><button class="primary-button" id="new-connection"><span>＋</span> New connection</button></div>
+        <div class="stats-row"><div class="stat"><span>Saved hosts</span><strong id="host-count">0</strong></div><div class="stat"><span>Active sessions</span><strong id="session-count">0</strong></div><div class="stat"><span>SSH client</span><strong class="stat-good"><i></i> System OpenSSH</strong></div></div>
+        <div class="section-heading"><h2>Saved hosts</h2><label class="searchbox"><span>⌕</span><input id="host-search" placeholder="Filter hosts" autocomplete="off"></label></div>
+        <div id="host-list" class="host-list"></div>
+        <div id="empty-state" class="empty-state"><div class="empty-icon">⌘</div><h3>No hosts saved yet</h3><p>Add a server to get started. Shellbay uses your system SSH keys and known_hosts.</p><button class="quiet-button" id="empty-add">＋ Add your first host</button></div>
+      </section>
+      <section class="view" id="toolbox-view">
+        <div class="page-heading"><div><div class="eyebrow">QUICK ACTIONS</div><h1>Security toolbox</h1><p>Searchable read-only diagnostics for the connected machine.</p></div><span class="tool-total">100+ actions</span></div>
+        <div class="tool-controls"><label class="searchbox tool-search"><span>⌕</span><input id="tool-search" placeholder="Search tools, commands, or tags" autocomplete="off"></label><div id="categories" class="category-row"></div></div>
+        <div id="tool-grid" class="tool-grid"></div>
+      </section>
+      <section class="view" id="activity-view">
+        <div class="page-heading"><div><div class="eyebrow">SESSION HISTORY</div><h1>Activity</h1><p>Recent connections in this browser.</p></div><button class="quiet-button" id="clear-activity">Clear history</button></div>
+        <div id="activity-list" class="activity-list"></div>
+      </section>
+      <section class="view" id="settings-view">
+        <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>Settings</h1><p>Shape the workspace and terminal to fit your setup.</p></div></div>
+        <div class="settings-layout">
+          <section class="settings-section"><div class="settings-heading"><span class="settings-symbol">◐</span><div><h2>Appearance</h2><p>Choose a workspace look and accent.</p></div></div>
+            <div class="settings-row"><div><strong>Theme</strong><small>Set the workspace light or dark.</small></div><div class="segmented" id="theme-options"><button data-theme-choice="light">Light</button><button data-theme-choice="dark">Dark</button><button data-theme-choice="system">System</button></div></div>
+            <div class="settings-row"><div><strong>Accent colour</strong><small>Change the highlight colour.</small></div><div class="swatches"><button class="swatch" data-accent-choice="green" title="Moss green" aria-label="Moss green"></button><button class="swatch" data-accent-choice="blue" title="Ocean blue" aria-label="Ocean blue"></button><button class="swatch" data-accent-choice="rose" title="Rose" aria-label="Rose"></button><button class="swatch" data-accent-choice="amber" title="Amber" aria-label="Amber"></button></div></div>
+          </section>
+          <section class="settings-section"><div class="settings-heading"><span class="settings-symbol">⌘</span><div><h2>Terminal</h2><p>Tune readability and interaction.</p></div></div>
+            <div class="settings-row setting-range"><div><strong>Text size</strong><small><span id="font-size-value">14</span> px</small></div><input id="font-size-setting" type="range" min="11" max="22" step="1" value="14"></div>
+            <div class="settings-row setting-range"><div><strong>Scrollback</strong><small><span id="scrollback-value">5000</span> lines</small></div><input id="scrollback-setting" type="range" min="1000" max="20000" step="1000" value="5000"></div>
+            <div class="settings-row"><div><strong>Cursor blink</strong><small>Animate the terminal cursor.</small></div><label class="switch"><input id="cursor-blink-setting" type="checkbox" checked><span></span></label></div>
+            <div class="settings-row"><div><strong>Reduce motion</strong><small>Turn off workspace transitions.</small></div><label class="switch"><input id="motion-setting" type="checkbox"><span></span></label></div>
+          </section>
+          <section class="settings-section"><div class="settings-heading"><span class="settings-symbol">⌁</span><div><h2>Session defaults</h2><p>Local preferences for future sessions.</p></div></div>
+            <div class="settings-row"><div><strong>Focus terminal on connect</strong><small>Start typing as soon as a session opens.</small></div><label class="switch"><input id="focus-setting" type="checkbox" checked><span></span></label></div>
+            <div class="settings-row"><div><strong>Keep connection history</strong><small>Store recent host activity in this browser.</small></div><label class="switch"><input id="history-setting" type="checkbox" checked><span></span></label></div>
+          </section>
+          <section class="settings-section"><div class="settings-heading"><span class="settings-symbol">↗</span><div><h2>SSH behaviour</h2><p>Set safe defaults for new connections.</p></div></div>
+            <div class="settings-row setting-range"><div><strong>Connection timeout</strong><small><span id="timeout-value">15</span> seconds</small></div><input id="timeout-setting" type="range" min="5" max="120" step="5" value="15"></div>
+            <div class="settings-row setting-range"><div><strong>Keepalive interval</strong><small><span id="keepalive-value">30</span> seconds · 0 disables</small></div><input id="keepalive-setting" type="range" min="0" max="120" step="10" value="30"></div>
+            <div class="settings-row"><div><strong>SSH diagnostics</strong><small>Show handshake details in the terminal.</small></div><label class="switch"><input id="verbose-setting" type="checkbox"><span></span></label></div>
+          </section>
+        </div>
+      </section>
+      <div class="footer"><span>Shellbay SSH Studio</span><span><i class="footer-dot"></i> SSH host verification is on</span></div>
+    </main>
+  </div>
+  <div class="modal-backdrop" id="pair-modal"><form class="modal pair-card" id="pair-form"><img src="/logo.svg" alt=""><div class="eyebrow">PRIVATE WORKSPACE</div><h2>Unlock Shellbay</h2><p>Enter the pairing code shown in the terminal where you started the server.</p><label class="field"><span>Pairing code</span><input id="pair-code" inputmode="text" maxlength="8" placeholder="8-character code" autocomplete="one-time-code" required></label><div class="form-error" id="pair-error"></div><button class="primary-button full-button">Unlock workspace</button></form></div>
+  <div class="modal-backdrop" id="host-modal"><form class="modal host-form" id="host-form"><button type="button" class="close-modal" data-close="host-modal" aria-label="Close">×</button><div class="eyebrow">CONNECTION PROFILE</div><h2 id="host-modal-title">New connection</h2><p>Use an SSH config alias or a hostname/IP from this machine.</p><input id="edit-id" type="hidden"><label class="field"><span>Connection name</span><input id="host-name" placeholder="Production server" required maxlength="48"></label><div class="field-row"><label class="field"><span>Host / SSH alias</span><input id="host-address" placeholder="my-server or 192.168.1.12" required maxlength="255"></label><label class="field port-field"><span>Port</span><input id="host-port" type="number" min="1" max="65535" value="22"></label></div><details class="advanced-fields"><summary>Advanced SSH options</summary><div class="field-row"><label class="field"><span>Login user</span><input id="host-user" placeholder="Use SSH config default" maxlength="64"></label><label class="field"><span>Identity file path</span><input id="host-identity" placeholder="~/.ssh/id_ed25519" maxlength="512"></label></div></details><div class="form-note"><span>◈</span> Use your SSH key or agent. Password prompts appear only when you open Shellbay on this machine via localhost.</div><div class="modal-actions"><button type="button" class="quiet-button" data-close="host-modal">Cancel</button><button class="primary-button">Save connection</button></div></form></div>
+  <div class="modal-backdrop" id="terminal-modal"><section class="terminal-window"><header class="terminal-titlebar"><div class="traffic-lights"><button data-close="terminal-modal" aria-label="Hide terminal"></button><button id="terminal-minimize" aria-label="Minimize"></button><button id="terminal-maximize" aria-label="Toggle full screen"></button></div><div class="terminal-title" id="terminal-title">Shellbay Terminal</div><button class="terminal-disconnect" id="disconnect-button">Disconnect</button></header><div class="terminal-subbar"><span><i id="terminal-state-dot"></i><span id="terminal-state">Connecting</span></span><span id="terminal-host-label"></span><span id="terminal-hint">Waiting for SSH authentication</span><label class="terminal-find"><span>⌕</span><input id="terminal-search" placeholder="Find in terminal" aria-label="Find in terminal"></label><button id="terminal-find-next" title="Find next">↓</button><button id="terminal-copy" title="Copy selection">▢</button><button id="terminal-save" title="Save transcript">⇩</button><button id="clear-terminal" title="Clear terminal">⌫</button></div><div id="terminal-output" aria-label="SSH terminal"></div></section></div>
+  <div class="modal-backdrop" id="ssh-password-modal"><form class="modal pair-card password-card" id="ssh-password-form" autocomplete="off"><img src="/logo.svg" alt=""><div class="eyebrow">SECURE SSH SIGN-IN</div><h2 id="ssh-password-title">SSH password</h2><p id="ssh-password-help">Enter your SSH credential to continue.</p><label class="field"><span id="ssh-password-label">Password</span><input id="ssh-password" name="ssh-session-secret" type="password" autocomplete="new-password" required maxlength="1024"></label><div class="form-note"><span>◈</span>Local browser only. Used for this session and never stored.</div><div class="modal-actions"><button type="button" class="quiet-button" id="ssh-password-cancel">Cancel sign-in</button><button class="primary-button">Continue</button></div></form></div>
+  <script defer src="/app.js"></script>
+</body>
+</html>

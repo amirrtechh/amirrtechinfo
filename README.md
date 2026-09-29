@@ -14,7 +14,7 @@ Cybersecurity, Python, Linux, and web security.
 
 ## Find me
 
-[TikTok](https://tiktok.com/@amirrisbadattech) · [YouTube](https://youtube.com/@amirrtech) · [Email](mailto:amirtechoffcial@gmail.com)
+[TikTok](https://tiktok.com/@amirrisbadattech) · [YouTube](https://youtube.com/@amirrtech) · [Email](mailto:amirrtechoffcial@gmail.com)
 
 ## GitHub activity
 

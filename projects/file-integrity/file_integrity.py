@@ -50,7 +50,11 @@ def write_baseline(root: Path, manifest: Path) -> dict[str, object]:
 
 def read_baseline(manifest: Path) -> dict[str, str]:
     document = json.loads(manifest.read_text(encoding="utf-8"))
-    if document.get("version") != 1 or not isinstance(document.get("files"), dict):
+    if (
+        not isinstance(document, dict)
+        or document.get("version") != 1
+        or not isinstance(document.get("files"), dict)
+    ):
         raise ValueError("unsupported or invalid manifest format")
 
     files = document["files"]
